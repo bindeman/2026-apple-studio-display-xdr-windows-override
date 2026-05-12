@@ -22,6 +22,9 @@ Current state:
 
 Next goal:
 Continue hacking brightness support, packaging, screenshots, docs, or EXE/GUI installer.
+Current investigation:
+- Refresh-rate toggling can clear a transient right-side pixelated/tile artifact.
+- Color profile support is not complete; Windows gets EDID wide-color/HDR metadata, but Apple macOS reference presets/ICC profile handling still need research.
 ```
 
 ## Quick Verification

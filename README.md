@@ -83,6 +83,12 @@ Enabled=True
 BitsPerChannel=10
 ```
 
+To turn HDR / Advanced Color back off:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\Disable-StudioXdrHdr.ps1
+```
+
 ## Simple Launchers
 
 These launchers are included for convenience:
@@ -90,6 +96,7 @@ These launchers are included for convenience:
 ```text
 Install-StudioXdr.cmd
 Enable-HDR.cmd
+Disable-HDR.cmd
 Uninstall-Override.cmd
 ```
 
@@ -144,6 +151,40 @@ After:  AdvancedColorRaw=7, Enabled=True,  BitsPerChannel=10
 ```
 
 That is what `scripts\Enable-StudioXdrHdr.ps1` does.
+
+## Color Profile Notes
+
+The EDID override includes the display's wide-color and HDR metadata. Windows can then expose the display as a wide-color/HDR target and output a 10-bpc signal path when Advanced Color is enabled.
+
+This does not install Apple's macOS reference presets. Apple reference modes such as `Apple XDR Display (P3-2000 nits)` and `Apple XDR Display (P3 + Adobe RGB-2000 nits)` are part of Apple's display preset system on macOS. On Windows, this repo currently provides the display mode and HDR transport path, not Apple's full preset UI.
+
+Practical current state:
+
+- The display hardware supports P3 and Adobe RGB wide gamut.
+- The imported EDID advertises BT.2020 / HDR static metadata.
+- Windows HDR / Advanced Color can be enabled and reports 10 bits per channel.
+- Color-managed apps can use Windows color management, but this repo does not yet install an Apple-authored Studio Display XDR ICC/ICM profile.
+
+For color-critical work, use a hardware calibrator and create a Windows ICC profile for your specific display. A future version of this repo may add optional ICC profile install/association once a redistributable Apple profile or reliable generated profile is available.
+
+Related Apple documentation:
+
+- [Studio Display XDR tech specs](https://support.apple.com/en-us/126323) list Apple XDR Display reference modes and wide-color support.
+- [Apple display preset documentation](https://support.apple.com/en-ca/108321) describes XDR presets including P3 and P3 + Adobe RGB modes.
+
+More detail: [docs/color-management.md](docs/color-management.md).
+
+## Pixelated Tile / Link Artifacts
+
+If part of the screen appears pixelated after switching to 5K/120, especially a fixed section on the right side, it is likely a transient tile/link/DSC state.
+
+Known local fix:
+
+1. Change refresh rate from `120 Hz` to `60 Hz`.
+2. Apply.
+3. Change back to `120 Hz`, `120.04 Hz`, or Dynamic Refresh Rate.
+
+This forces Windows, the GPU driver, and the Thunderbolt/DisplayPort link to retrain the display timing. If `120.04 Hz` is stable on your system, it is fine to use; it is just a slightly different timing entry, not inherently better than exact `120 Hz`.
 
 ## Brightness
 
