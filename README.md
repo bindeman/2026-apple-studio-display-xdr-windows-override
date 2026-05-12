@@ -9,6 +9,7 @@ Validated locally:
 - HDR / Advanced Color enabled through the Windows DisplayConfig API
 - 10 bits per color channel after HDR enable
 - Studio Display XDR USB devices detected: camera, speakers, microphone, HID brightness interface
+- Brightness control over Apple USB HID, no DDC/CI required
 
 ## Why This Is Needed
 
@@ -97,6 +98,9 @@ These launchers are included for convenience:
 Install-StudioXdr.cmd
 Enable-HDR.cmd
 Disable-HDR.cmd
+Brightness-Up.cmd
+Brightness-Down.cmd
+Brightness-Status.cmd
 Uninstall-Override.cmd
 ```
 
@@ -190,7 +194,7 @@ This forces Windows, the GPU driver, and the Thunderbolt/DisplayPort link to ret
 
 ## Brightness
 
-Brightness is separate from the display mode issue.
+Brightness is separate from the display mode issue, but it is working locally.
 
 Apple displays do not use normal DDC/CI brightness. Studio Display XDR exposes brightness through Apple USB HID:
 
@@ -200,7 +204,44 @@ Usage Page: 0x0082
 Usage:      0x0010
 ```
 
-The local prototype confirmed the Windows HID brightness feature is visible. Brightness tooling can be added after the 5K/120/HDR path is stable.
+Read current brightness:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\StudioXdrBrightness.ps1 -ListOnly
+```
+
+Set an approximate percent:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\StudioXdrBrightness.ps1 -SetPercent 60
+```
+
+Step brightness up/down:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\StudioXdrBrightness.ps1 -StepPercent 5
+powershell -ExecutionPolicy Bypass -File .\scripts\StudioXdrBrightness.ps1 -StepPercent -5
+```
+
+Convenience launchers:
+
+```text
+Brightness-Up.cmd
+Brightness-Down.cmd
+Brightness-Status.cmd
+```
+
+Local validation:
+
+```text
+Current=60000 (~60%)
+Set to 55000
+Read back 55000 (~55%)
+Set back to 60000
+Read back 60000 (~60%)
+```
+
+More detail: [docs/brightness.md](docs/brightness.md).
 
 ## Screenshots
 

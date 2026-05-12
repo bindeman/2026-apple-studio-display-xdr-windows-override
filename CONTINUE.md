@@ -25,6 +25,7 @@ Continue hacking brightness support, packaging, screenshots, docs, or EXE/GUI in
 Current investigation:
 - Refresh-rate toggling can clear a transient right-side pixelated/tile artifact.
 - Color profile support is not complete; Windows gets EDID wide-color/HDR metadata, but Apple macOS reference presets/ICC profile handling still need research.
+- Brightness control works through Apple USB HID with scripts\StudioXdrBrightness.ps1; local validation stepped 60% -> 55% -> 60%.
 ```
 
 ## Quick Verification

@@ -9,6 +9,7 @@ Recommended screenshots for the README:
 5. HDR state after running `Enable-StudioXdrHdr.ps1`, ideally with `BitsPerChannel=10`.
 6. Device Manager or PowerShell output showing `USB4 Router (2.0), Apple - Studio Display XDR`.
 7. Optional: Windows Color Management screen showing any custom ICC profile associated with the Studio XDR.
+8. Brightness status output showing `Current=60000 (~60%)` or another raw/percent value.
 
 Place final images in:
 
