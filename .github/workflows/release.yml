@@ -1,0 +1,28 @@
+name: Release ZIP
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $name = "studio-display-xdr-windows"
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Compress-Archive -Path `
+            README.md,LICENSE,Install-StudioXdr.cmd,Enable-HDR.cmd,Uninstall-Override.cmd,scripts,edid,docs `
+            -DestinationPath "dist/$name.zip" -Force
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio-display-xdr-windows
+          path: dist/studio-display-xdr-windows.zip

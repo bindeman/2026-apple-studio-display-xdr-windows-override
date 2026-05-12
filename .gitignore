@@ -1,0 +1,10 @@
+downloads/
+backups/
+tools/
+dist/
+*.zip
+*.log
+*.tmp
+*.bak
+*.user
+*.suo
