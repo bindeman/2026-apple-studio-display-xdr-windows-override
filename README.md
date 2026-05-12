@@ -193,6 +193,14 @@ Known local fix:
 
 This forces Windows, the GPU driver, and the Thunderbolt/DisplayPort link to retrain the display timing. If `120.04 Hz` is stable on your system, it is fine to use; it is just a slightly different timing entry, not inherently better than exact `120 Hz`.
 
+## DisplayPort Adapter Notes
+
+The known-good path is Thunderbolt/USB4 from the PC to the Studio Display XDR.
+
+A DisplayPort-to-USB-C/Thunderbolt adapter that produces a black screen is usually not fixable with an EDID override because Windows never sees a monitor to override. Direction also matters: most `USB-C to DisplayPort` cables are the wrong direction for Apple displays.
+
+More detail: [docs/displayport-adapters.md](docs/displayport-adapters.md).
+
 ## Brightness
 
 Brightness is separate from the display mode issue, but it is working locally.

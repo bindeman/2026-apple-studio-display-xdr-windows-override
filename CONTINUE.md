@@ -27,6 +27,7 @@ Current investigation:
 - Color profile support is not complete; Windows gets EDID wide-color/HDR metadata, but Apple macOS reference presets/ICC profile handling still need research.
 - Brightness control works through Apple USB HID with scripts\StudioXdrBrightness.ps1; local validation stepped 60% -> 55% -> 60%.
 - Apple-Brightness-Tray.cmd starts a PowerShell WinForms tray app for Studio Display XDR and Pro Display XDR, with best-effort F1/F2 global hotkeys.
+- DP 1.4 to USB-C/Thunderbolt adapter path gave black screen; docs note this is likely hardware/link/adapter direction and not fixable unless Windows enumerates a DISPLAY device.
 ```
 
 ## Quick Verification
