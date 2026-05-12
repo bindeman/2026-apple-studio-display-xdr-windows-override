@@ -53,12 +53,29 @@ powershell -ExecutionPolicy Bypass -File .\scripts\StudioXdrBrightness.ps1 -Step
 ## Launchers
 
 ```text
+Apple-Brightness-Tray.cmd
 Brightness-Up.cmd
 Brightness-Down.cmd
 Brightness-Status.cmd
 ```
 
-These are simple wrappers around the PowerShell script. They do not currently bind to keyboard brightness keys.
+`Apple-Brightness-Tray.cmd` starts a small tray app with display selection and brightness controls. It supports both:
+
+```text
+Studio Display XDR: PID_1116
+Pro Display XDR:    PID_9243
+```
+
+The tray app attempts to register global `F1` and `F2` hotkeys:
+
+```text
+F1: brightness down 5%
+F2: brightness up 5%
+```
+
+This is best-effort. Some keyboards, firmware layers, or apps may reserve these keys. If registration fails, the tray app disables the hotkey checkbox and the tray menu controls remain available.
+
+The other launchers are simple one-shot wrappers around the PowerShell script.
 
 ## Notes
 
@@ -73,7 +90,7 @@ No administrator privileges are required for brightness control when Windows exp
 
 ## Future Work
 
-- Add a tray app.
 - Add global hotkeys for brightness up/down.
+- Add a signed EXE wrapper for the tray app.
 - Support multiple Apple displays and route brightness to the focused monitor.
 - Investigate reference mode / preset control over Apple HID.

@@ -98,6 +98,7 @@ These launchers are included for convenience:
 Install-StudioXdr.cmd
 Enable-HDR.cmd
 Disable-HDR.cmd
+Apple-Brightness-Tray.cmd
 Brightness-Up.cmd
 Brightness-Down.cmd
 Brightness-Status.cmd
@@ -242,6 +243,24 @@ Read back 60000 (~60%)
 ```
 
 More detail: [docs/brightness.md](docs/brightness.md).
+
+### Tray Brightness App
+
+Run:
+
+```text
+Apple-Brightness-Tray.cmd
+```
+
+The tray app supports:
+
+- Studio Display XDR (`PID_1116`)
+- Pro Display XDR (`PID_9243`)
+- Tray menu brightness up/down
+- Display selection when multiple supported Apple displays are connected
+- Optional global `F1` / `F2` hotkeys for brightness down/up
+
+The `F1` / `F2` hotkeys are best-effort. If Windows, firmware, or another app already owns those keys, the tray app disables the hotkey checkbox and tray controls still work.
 
 ## Screenshots
 

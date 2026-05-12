@@ -18,7 +18,7 @@ jobs:
           $name = "studio-display-xdr-windows"
           New-Item -ItemType Directory -Force -Path dist | Out-Null
           Compress-Archive -Path `
-            README.md,LICENSE,Install-StudioXdr.cmd,Enable-HDR.cmd,Disable-HDR.cmd,Brightness-Up.cmd,Brightness-Down.cmd,Brightness-Status.cmd,Uninstall-Override.cmd,scripts,edid,docs `
+            README.md,LICENSE,Install-StudioXdr.cmd,Enable-HDR.cmd,Disable-HDR.cmd,Apple-Brightness-Tray.cmd,Brightness-Up.cmd,Brightness-Down.cmd,Brightness-Status.cmd,Uninstall-Override.cmd,scripts,edid,docs `
             -DestinationPath "dist/$name.zip" -Force
 
       - name: Upload artifact
