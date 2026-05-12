@@ -36,7 +36,26 @@ On the tested Windows machine, no Apple display profiles were present under:
 C:\Windows\System32\spool\drivers\color
 ```
 
+No reusable Pro Display XDR `.icc` or `.icm` files were found in the locally extracted Boot Camp package either.
+
 The current workaround gets Windows into the correct high-bandwidth display mode and enables HDR/Advanced Color, but it does not recreate Apple's macOS reference-mode UI.
+
+## Luminance Metadata
+
+Peak HDR luminance is not normally controlled by an ICC profile. For Windows HDR detection, the relevant values are in the display EDID / CTA HDR Static Metadata block.
+
+The bundled Studio XDR EDID currently contains:
+
+```text
+HDR metadata bytes: E6 06 05 01 AB 73 00
+Desired content max luminance:        code 0xAB ~= 2030.5 nits
+Desired max frame-average luminance:  code 0x73 ~= 603.7 nits
+Minimum luminance:                    code 0x00
+```
+
+So the EDID already advertises roughly 2000 nits peak HDR luminance. It is not carrying a 1600-nit Pro Display XDR value.
+
+The `603.7 nits` frame-average value should not be blindly treated as "SDR brightness." Apple's SDR/reference-mode brightness behavior is part of its display preset system and local dimming behavior, not just an ICC profile field. Patching the EDID frame-average luminance to approximate 1000 nits may be possible, but it should be tested as a separate experimental EDID variant rather than made the default.
 
 ## Recommended Path For Accurate Color
 

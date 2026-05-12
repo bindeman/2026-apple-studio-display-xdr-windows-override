@@ -167,6 +167,8 @@ Practical current state:
 
 For color-critical work, use a hardware calibrator and create a Windows ICC profile for your specific display. A future version of this repo may add optional ICC profile install/association once a redistributable Apple profile or reliable generated profile is available.
 
+The bundled EDID already advertises about `2030 nits` peak HDR luminance. It does not appear to be using a Pro Display XDR `1600 nits` value. The max frame-average luminance field is about `604 nits`, but that is not the same thing as Apple's SDR reference-mode brightness.
+
 Related Apple documentation:
 
 - [Studio Display XDR tech specs](https://support.apple.com/en-us/126323) list Apple XDR Display reference modes and wide-color support.
