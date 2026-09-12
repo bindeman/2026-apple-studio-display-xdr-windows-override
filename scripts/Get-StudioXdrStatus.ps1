@@ -6,6 +6,16 @@ Get-CimInstance -ClassName Win32_VideoController |
     Format-Table -AutoSize
 
 Write-Host ""
+Write-Host "== Active Studio Display XDR DisplayConfig target =="
+$colorStatusScript = Join-Path $PSScriptRoot "Get-StudioXdrColorStatus.ps1"
+if (Test-Path -LiteralPath $colorStatusScript) {
+    & $colorStatusScript
+}
+else {
+    Write-Host "Get-StudioXdrColorStatus.ps1 not found."
+}
+
+Write-Host ""
 Write-Host "== Present monitors =="
 Get-PnpDevice -Class Monitor -PresentOnly |
     Select-Object FriendlyName,Status,InstanceId |

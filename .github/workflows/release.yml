@@ -1,10 +1,16 @@
-name: Release ZIP
+name: Build and Release
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
+    branches:
+      - main
     tags:
       - "v*"
+
+permissions:
+  contents: write
 
 jobs:
   package:
@@ -12,17 +18,48 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Package
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Check release tag matches VERSION
+        if: startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         run: |
-          $name = "studio-display-xdr-windows"
-          New-Item -ItemType Directory -Force -Path dist | Out-Null
-          Compress-Archive -Path `
-            README.md,LICENSE,Install-StudioXdr.cmd,Enable-HDR.cmd,Uninstall-Override.cmd,scripts,edid,docs `
-            -DestinationPath "dist/$name.zip" -Force
+          $version = (Get-Content -Raw .\VERSION).Trim()
+          $tag = "${{ github.ref_name }}"
+          if ($tag -ne "v$version") {
+            throw "Tag '$tag' does not match VERSION file 'v$version'. Update VERSION before tagging."
+          }
+          Write-Host "Tag $tag matches VERSION $version"
 
-      - name: Upload artifact
+      # The release gate builds both package flavors and verifies each of them:
+      #   dist/studio-display-xdr-windows.zip          full package: control panel GUI + setup launcher + scripts
+      #   dist/studio-display-xdr-windows-scripts.zip  scripts-only package: PowerShell + launchers, no GUI
+      # Interactive app smoke tests are skipped because hosted runners have no Studio Display XDR
+      # and no interactive desktop.
+      - name: Build and verify both packages
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File .\scripts\Test-StudioDisplayXdrRelease.ps1 -SkipInteractiveApp -Quiet
+
+      - name: Upload full package (GUI)
         uses: actions/upload-artifact@v4
         with:
           name: studio-display-xdr-windows
           path: dist/studio-display-xdr-windows.zip
+
+      - name: Upload scripts-only package (no GUI)
+        uses: actions/upload-artifact@v4
+        with:
+          name: studio-display-xdr-windows-scripts
+          path: dist/studio-display-xdr-windows-scripts.zip
+
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Studio Display XDR for Windows ${{ github.ref_name }}
+          files: |
+            dist/studio-display-xdr-windows.zip
+            dist/studio-display-xdr-windows-scripts.zip
+          body_path: RELEASE_NOTES.md

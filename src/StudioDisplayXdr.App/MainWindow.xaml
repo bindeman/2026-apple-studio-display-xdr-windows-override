@@ -1,0 +1,483 @@
+<Window x:Class="StudioDisplayXdr.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Studio Display XDR"
+        Width="620"
+        Height="900"
+        MinHeight="760"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        Icon="StudioDisplayXdr.ico"
+        Background="#F5F5F7"
+        FontFamily="Segoe UI Variable, Segoe UI">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#1D1D1F" />
+        </Style>
+
+        <Style x:Key="CaptionText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#6E6E73" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="LineHeight" Value="18" />
+        </Style>
+
+        <Style x:Key="Panel" TargetType="Border">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#D9D9DE" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+
+        <Style x:Key="Switch" TargetType="CheckBox">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid>
+                            <Border x:Name="Track" CornerRadius="12" Background="#D1D1D6" />
+                            <Ellipse x:Name="Thumb" Width="20" Height="20" Fill="#FFFFFF" Margin="2" HorizontalAlignment="Left">
+                                <Ellipse.Effect>
+                                    <DropShadowEffect BlurRadius="4" ShadowDepth="1" Opacity="0.2" />
+                                </Ellipse.Effect>
+                            </Ellipse>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Track" Property="Background" Value="#34C759" />
+                                <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Track" Property="Opacity" Value="0.45" />
+                                <Setter TargetName="Thumb" Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SegmentButton" TargetType="Button">
+            <Setter Property="MinWidth" Value="74" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Background" Value="#F5F5F7" />
+            <Setter Property="BorderBrush" Value="#D1D1D6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#1D1D1F" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonChrome"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonChrome" Property="Background" Value="#EAEAED" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonChrome" Property="Background" Value="#D9D9DE" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonChrome" Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Slider">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Minimum" Value="0" />
+            <Setter Property="Maximum" Value="100" />
+            <Setter Property="TickFrequency" Value="1" />
+            <Setter Property="IsSnapToTickEnabled" Value="False" />
+            <Setter Property="AutoToolTipPlacement" Value="TopLeft" />
+            <Setter Property="AutoToolTipPrecision" Value="0" />
+        </Style>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="22" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="14" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="14" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="14" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="14" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="14" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="14" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="Studio Display XDR" FontSize="28" FontWeight="SemiBold" />
+                <TextBlock x:Name="SubtitleText" Text="Brightness" Style="{StaticResource CaptionText}" Margin="1,4,0,0" />
+            </StackPanel>
+
+            <Border Grid.Column="1" x:Name="ConnectionPill" Background="#E8F5E9" CornerRadius="8" Padding="12,7" VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="ConnectionDot" Width="8" Height="8" Fill="#34C759" Margin="0,0,7,0" />
+                    <TextBlock x:Name="ConnectionText" Text="Connected" FontSize="12" FontWeight="SemiBold" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <ItemsControl x:Name="DisplayList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Panel}" Padding="20" Margin="0,0,0,14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="112" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Width="84" Height="72" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Border Width="80" Height="50" CornerRadius="7" Background="#17171A" BorderBrush="#2C2C31" BorderThickness="2" VerticalAlignment="Top" />
+                                    <Border Width="62" Height="34" CornerRadius="4" Background="#303036" VerticalAlignment="Top" Margin="0,8,0,0" />
+                                    <Rectangle Width="10" Height="14" Fill="#9B9BA1" VerticalAlignment="Bottom" Margin="0,0,0,7" />
+                                    <Border Width="44" Height="5" CornerRadius="2.5" Background="#9B9BA1" VerticalAlignment="Bottom" />
+                                </Grid>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Title}" FontSize="17" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding Detail}" Style="{StaticResource CaptionText}" Margin="0,3,0,0" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{Binding PercentLabel}" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Top" />
+                                    </Grid>
+
+                                    <Slider AutomationProperties.AutomationId="BrightnessSlider"
+                                            Value="{Binding Percent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            ValueChanged="BrightnessSlider_OnValueChanged"
+                                            Margin="0,17,0,0" />
+                                    <TextBlock Text="{Binding Status}" Style="{StaticResource CaptionText}" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Border x:Name="NoDisplayPanel" Style="{StaticResource Panel}" Padding="24" Visibility="Collapsed">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock x:Name="NoDisplayTitle" Text="No Studio Display XDR found" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="NoDisplayText"
+                               Text="Connect over Thunderbolt or USB4 so Windows can see the Apple brightness interface."
+                               Style="{StaticResource CaptionText}"
+                               Margin="0,8,0,0"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="4" Style="{StaticResource Panel}" Padding="20,16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Signal" FontSize="15" FontWeight="SemiBold" />
+                        <TextBlock x:Name="SignalText"
+                                   Text="Reading display signal..."
+                                   Style="{StaticResource CaptionText}"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="OptimizeSignalButton"
+                                Content="Optimize"
+                                Style="{StaticResource SegmentButton}"
+                                Click="OptimizeSignalButton_OnClick"
+                                Margin="0,0,8,0" />
+                        <Button x:Name="RefreshSignalButton"
+                                Content="Refresh"
+                                Style="{StaticResource SegmentButton}"
+                                Click="RefreshSignalButton_OnClick" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Refresh rate" FontSize="15" FontWeight="SemiBold" />
+                        <TextBlock x:Name="RefreshRateText"
+                                   Text="No active Studio Display XDR signal yet."
+                                   Style="{StaticResource CaptionText}"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="Refresh60Button"
+                                Content="60 Hz"
+                                Style="{StaticResource SegmentButton}"
+                                Click="Refresh60Button_OnClick"
+                                Margin="0,0,8,0" />
+                        <Button x:Name="Refresh120Button"
+                                Content="120 Hz"
+                                Style="{StaticResource SegmentButton}"
+                                Click="Refresh120Button_OnClick" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="HDR" FontSize="15" FontWeight="SemiBold" />
+                        <TextBlock x:Name="HdrText"
+                                   Text="Reading Advanced Color state..."
+                                   Style="{StaticResource CaptionText}"
+                                   Margin="0,4,0,0"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <CheckBox Grid.Column="1"
+                              x:Name="HdrToggle"
+                              AutomationProperties.AutomationId="HdrToggle"
+                              Style="{StaticResource Switch}"
+                              Checked="HdrToggle_OnChanged"
+                              Unchecked="HdrToggle_OnChanged"
+                              VerticalAlignment="Center" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="6" Style="{StaticResource Panel}" Padding="20,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Color profile" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock x:Name="ColorProfileText"
+                               AutomationProperties.AutomationId="ColorProfileText"
+                               Text="Checking Display P3 profile..."
+                               Style="{StaticResource CaptionText}"
+                               Margin="0,4,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="CheckColorProfileButton"
+                            AutomationProperties.AutomationId="ColorProfileCheckButton"
+                            Content="Check"
+                            Style="{StaticResource SegmentButton}"
+                            Click="CheckColorProfileButton_OnClick"
+                            Margin="0,0,10,0" />
+                    <Button x:Name="InstallColorProfileButton"
+                            AutomationProperties.AutomationId="ColorProfileInstallButton"
+                            Content="Install"
+                            Style="{StaticResource SegmentButton}"
+                            Click="InstallColorProfileButton_OnClick" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="8" Style="{StaticResource Panel}" Padding="20,16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Automatically adjust brightness" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock x:Name="AutoBrightnessText"
+                               AutomationProperties.AutomationId="AutoBrightnessText"
+                               Text="Install the experimental ambient connector to read the Studio Display XDR light sensor."
+                               Style="{StaticResource CaptionText}"
+                               Margin="0,4,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="AmbientCheckButton"
+                            AutomationProperties.AutomationId="AmbientCheckButton"
+                            Content="Check"
+                            Style="{StaticResource SegmentButton}"
+                            Click="AmbientCheckButton_OnClick"
+                            Margin="0,0,10,0" />
+                    <CheckBox x:Name="AutoBrightnessToggle"
+                              AutomationProperties.AutomationId="AutoBrightnessToggle"
+                              Style="{StaticResource Switch}"
+                              IsEnabled="False"
+                              Checked="AutoBrightnessToggle_OnChanged"
+                              Unchecked="AutoBrightnessToggle_OnChanged"
+                              VerticalAlignment="Center" />
+                </StackPanel>
+
+                <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="14" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="14" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <Grid>
+                            <TextBlock Text="Minimum" Style="{StaticResource CaptionText}" />
+                            <TextBlock x:Name="AutoMinimumText" Text="25%" Style="{StaticResource CaptionText}" HorizontalAlignment="Right" />
+                        </Grid>
+                        <Slider x:Name="AutoMinimumSlider"
+                                AutomationProperties.AutomationId="AutoMinimumSlider"
+                                Minimum="5"
+                                Maximum="70"
+                                ValueChanged="AutoMinimumSlider_OnValueChanged"
+                                Margin="0,4,0,0" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <Grid>
+                            <TextBlock Text="Maximum" Style="{StaticResource CaptionText}" />
+                            <TextBlock x:Name="AutoMaximumText" Text="100%" Style="{StaticResource CaptionText}" HorizontalAlignment="Right" />
+                        </Grid>
+                        <Slider x:Name="AutoMaximumSlider"
+                                AutomationProperties.AutomationId="AutoMaximumSlider"
+                                Minimum="10"
+                                Maximum="100"
+                                ValueChanged="AutoMaximumSlider_OnValueChanged"
+                                Margin="0,4,0,0" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="4">
+                        <Grid>
+                            <TextBlock Text="Response" Style="{StaticResource CaptionText}" />
+                            <TextBlock x:Name="AutoResponseText" Text="100%" Style="{StaticResource CaptionText}" HorizontalAlignment="Right" />
+                        </Grid>
+                        <Slider x:Name="AutoResponseSlider"
+                                AutomationProperties.AutomationId="AutoResponseSlider"
+                                Minimum="50"
+                                Maximum="160"
+                                ValueChanged="AutoResponseSlider_OnValueChanged"
+                                Margin="0,4,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="10" Style="{StaticResource Panel}" Padding="20,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Diagnostics" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock x:Name="DiagnosticsText"
+                               AutomationProperties.AutomationId="DiagnosticsText"
+                               Text="Run a readiness check or generate a support report for GitHub issues."
+                               Style="{StaticResource CaptionText}"
+                               Margin="0,4,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="CheckReadinessButton"
+                            AutomationProperties.AutomationId="DiagnosticsCheckButton"
+                            Content="Check"
+                            Style="{StaticResource SegmentButton}"
+                            Click="CheckReadinessButton_OnClick"
+                            Margin="0,0,10,0" />
+                    <Button x:Name="GenerateReportButton"
+                            AutomationProperties.AutomationId="DiagnosticsReportButton"
+                            Content="Report"
+                            Style="{StaticResource SegmentButton}"
+                            Click="GenerateReportButton_OnClick" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="12" Style="{StaticResource Panel}" Padding="20,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Open at login" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock x:Name="StartupText" Text="Keep display brightness available after Windows starts." Style="{StaticResource CaptionText}" Margin="0,4,0,0" TextWrapping="Wrap" />
+                </StackPanel>
+                <CheckBox Grid.Column="1"
+                          x:Name="StartupToggle"
+                          AutomationProperties.AutomationId="StartupToggle"
+                          Style="{StaticResource Switch}"
+                          VerticalAlignment="Center"
+                          Checked="StartupToggle_OnChanged"
+                          Unchecked="StartupToggle_OnChanged" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="14" Style="{StaticResource Panel}" Padding="20,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="About" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock x:Name="AboutText"
+                               AutomationProperties.AutomationId="AboutText"
+                               Text="Reading package metadata..."
+                               Style="{StaticResource CaptionText}"
+                               Margin="0,4,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+                <Button Grid.Column="1"
+                        x:Name="CopyAboutButton"
+                        AutomationProperties.AutomationId="CopyAboutButton"
+                        Content="Copy"
+                        Style="{StaticResource SegmentButton}"
+                        Click="CopyAboutButton_OnClick"
+                        VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+    </Grid>
+    </ScrollViewer>
+</Window>

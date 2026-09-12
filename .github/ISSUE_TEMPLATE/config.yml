@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Read the support matrix
+    url: https://github.com/bindeman/2026-apple-studio-display-xdr-windows-override/blob/main/docs/support-matrix.md
+    about: Check what is working, experimental, and not replicated before filing an issue.
