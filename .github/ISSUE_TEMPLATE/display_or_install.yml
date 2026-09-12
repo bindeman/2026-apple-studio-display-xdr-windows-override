@@ -1,0 +1,66 @@
+name: Display, install, or brightness issue
+description: Report native resolution, HDR, color profile, installer, or brightness slider problems.
+title: "[Display] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Run `Support-Report.cmd` first and attach the generated report from `reports/`.
+        The report includes display mode, HDR/color state, app settings, Open at login state, install state, USB devices, and package metadata.
+        Do not paste the whole report into the issue body unless GitHub upload is unavailable.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the exact problem and what you expected instead.
+    validations:
+      required: true
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU and connection path
+      placeholder: "Example: RTX 5090 -> Thunderbolt/USB4, or Radeon 8060S -> USB-C"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Native 5120x2880 mode
+        - 120 Hz / 120.04 Hz
+        - HDR / Advanced Color
+        - Brightness slider
+        - Color profile
+        - Installer / uninstaller
+        - Camera / microphone / speakers
+        - Gaming / tearing
+        - DisplayPort adapter path
+    validations:
+      required: true
+  - type: textarea
+    id: current_state
+    attributes:
+      label: Current Windows state
+      description: Include resolution, refresh rate, HDR state, and whether the control panel sees the display.
+      placeholder: "Example: 5120x2880 @ 60 Hz, HDR off, brightness slider works"
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: Support report
+      description: Drag the generated report file here, or paste the key lines if upload is unavailable.
+      placeholder: "Attach reports/studio-xdr-support-*.txt"
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or photos
+      description: Add Windows Display Settings, Advanced Display, Device Manager, or visible artifact photos if relevant.
+    validations:
+      required: false

@@ -2,6 +2,10 @@ downloads/
 backups/
 tools/
 dist/
+reports/
+PACKAGE.json
+bin/
+obj/
 *.zip
 *.log
 *.tmp

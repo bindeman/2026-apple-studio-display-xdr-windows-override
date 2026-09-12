@@ -1,0 +1,36 @@
+; Experimental WinUSB binding for the 2026 Apple Studio Display XDR ambient-light interface.
+; This targets only USB\VID_05AC&PID_1116&REV_1801&MI_08 / USB\VID_05AC&PID_1116&MI_08.
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = USBDevice
+ClassGuid   = {88BAE032-5A81-49F0-BC3D-A4FF138216D6}
+Provider    = %ProviderName%
+DriverVer   = 05/12/2026,1.0.0.0
+CatalogFile = StudioXdrAmbientWinUsb.cat
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64
+
+[Standard.NTamd64]
+%DeviceName% = USB_Install, USB\VID_05AC&PID_1116&REV_1801&MI_08
+%DeviceName% = USB_Install, USB\VID_05AC&PID_1116&MI_08
+
+[USB_Install]
+Include = winusb.inf
+Needs   = WINUSB.NT
+
+[USB_Install.Services]
+Include = winusb.inf
+Needs   = WINUSB.NT.Services
+
+[USB_Install.HW]
+AddReg = DeviceInterfaceGuid
+
+[DeviceInterfaceGuid]
+HKR,,DeviceInterfaceGUIDs,0x10000,"{6F94F6F0-7B76-4DFB-AD85-905E20C82D9D}"
+
+[Strings]
+ProviderName     = "Studio Display XDR Windows Override"
+ManufacturerName = "Apple"
+DeviceName       = "Studio Display XDR Ambient Light Interface"

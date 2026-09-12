@@ -103,13 +103,19 @@ function Install-Override([string]$deviceParametersPath, [byte[]]$edid) {
     New-ItemProperty -Path $overridePath -Name "CRU_Serial_Number" -PropertyType Binary -Value ([byte[]](0)) -Force | Out-Null
     New-ItemProperty -Path $overridePath -Name "CRU_Extensions" -PropertyType Binary -Value ([byte[]](0)) -Force | Out-Null
 
-    $stale = Get-ItemProperty -Path $overridePath |
-        Select-Object -ExpandProperty PSObject |
-        Select-Object -ExpandProperty Properties |
-        Where-Object { $_.Name -match "^\d+$" -and [int]$_.Name -ge $blockCount }
-
-    foreach ($prop in $stale) {
-        Remove-ItemProperty -Path $overridePath -Name $prop.Name -ErrorAction SilentlyContinue
+    # Remove stale numbered block values left over from a previous, longer override.
+    # This uses RegistryKey.GetValueNames() instead of "Select-Object -ExpandProperty PSObject",
+    # which fails under Windows PowerShell 5.1 with: Property "PSObject" cannot be found (GitHub issue #3).
+    # Cleanup failure is not fatal: every override value above has already been written.
+    try {
+        $key = Get-Item -LiteralPath $overridePath
+        $staleNames = @($key.GetValueNames() | Where-Object { $_ -match "^\d+$" -and [int]$_ -ge $blockCount })
+        foreach ($name in $staleNames) {
+            Remove-ItemProperty -Path $overridePath -Name $name -ErrorAction SilentlyContinue
+        }
+    }
+    catch {
+        Write-Warning "The EDID override was written, but stale block cleanup failed: $($_.Exception.Message)"
     }
 }
 
@@ -140,10 +146,17 @@ Write-Host ""
 
 Install-Override $deviceParametersPath $edid
 
-Write-Host "Installed Studio Display XDR EDID override."
+Write-Host "Installed Studio Display XDR EDID override." -ForegroundColor Green
+Write-Host "  Registry key: $deviceParametersPath\EDID_OVERRIDE"
+Write-Host "  EDID blocks:  $([int]($edid.Length / 128)) ($($edid.Length) bytes)"
+Write-Host "  PowerShell:   $($PSVersionTable.PSVersion)"
+Write-Host ""
+Write-Host "The override takes effect only after a reboot or graphics driver restart."
 Write-Host ""
 Write-Host "Next steps:"
 Write-Host "1. Reboot Windows, or restart the graphics driver."
 Write-Host "2. Set display resolution to 5120 x 2880."
 Write-Host "3. Set refresh rate to 120 Hz."
 Write-Host "4. Run scripts\Enable-StudioXdrHdr.ps1 if HDR is not visible in Settings."
+Write-Host ""
+Write-Host "If the display stays black after the reboot, see docs\recovery.md for Safe Mode and offline registry recovery."

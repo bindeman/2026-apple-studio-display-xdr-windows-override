@@ -143,11 +143,10 @@ public static class AppleDisplayBrightness
                     string lower = path.ToLowerInvariant();
                     if (!lower.StartsWith(@"\\?\hid#")) continue;
                     if (!lower.Contains("vid_05ac")) continue;
-                    if (!lower.Contains("pid_1116") && !lower.Contains("pid_9243")) continue;
+                    if (!lower.Contains("pid_1116")) continue;
 
                     var info = ProbePath(path);
                     if (lower.Contains("pid_1116")) { info.ProductId = "1116"; info.DisplayName = "Studio Display XDR"; }
-                    if (lower.Contains("pid_9243")) { info.ProductId = "9243"; info.DisplayName = "Pro Display XDR"; }
                     found.Add(info);
                 }
                 finally
@@ -304,19 +303,14 @@ function Get-AppleDisplayBrightnessDevice {
     if ($devices.Count -eq 0) {
         $hidInterfaceGuid = "{4d1e55b2-f16f-11cf-88cb-001111000030}"
         $instances = Get-CimInstance Win32_PnPEntity |
-            Where-Object { $_.DeviceID -match "^HID\\VID_05AC&PID_(1116|9243)" } |
+            Where-Object { $_.DeviceID -match "^HID\\VID_05AC&PID_1116" } |
             Select-Object -ExpandProperty DeviceID
 
         foreach ($instance in $instances) {
             $path = "\\?\" + ($instance.ToLowerInvariant() -replace "\\", "#") + "#" + $hidInterfaceGuid
             $device = [AppleDisplayBrightness]::ProbePath($path)
-            if ($instance -match "PID_1116") {
-                $device.ProductId = "1116"
-                $device.DisplayName = "Studio Display XDR"
-            } elseif ($instance -match "PID_9243") {
-                $device.ProductId = "9243"
-                $device.DisplayName = "Pro Display XDR"
-            }
+            $device.ProductId = "1116"
+            $device.DisplayName = "Studio Display XDR"
             $devices += $device
         }
     }

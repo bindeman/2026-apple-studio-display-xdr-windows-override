@@ -53,27 +53,49 @@ powershell -ExecutionPolicy Bypass -File .\scripts\StudioXdrBrightness.ps1 -Step
 ## Launchers
 
 ```text
+Studio-Display-XDR.cmd
 Apple-Brightness-Tray.cmd
 Brightness-Up.cmd
 Brightness-Down.cmd
 Brightness-Status.cmd
 ```
 
-`Apple-Brightness-Tray.cmd` starts a small tray app with display selection and brightness controls. It supports both:
+`Studio-Display-XDR.cmd` opens the native Windows control panel:
+
+```text
+StudioDisplayXdr.App\StudioDisplayXdr.exe
+```
+
+In a development checkout, the staged build is also available at `dist\StudioDisplayXdr.App\StudioDisplayXdr.exe`.
+
+The control panel is intentionally Studio Display XDR only:
 
 ```text
 Studio Display XDR: PID_1116
-Pro Display XDR:    PID_9243
 ```
 
-The tray app attempts to register global `F1` and `F2` hotkeys:
+`Apple-Brightness-Tray.cmd` is retained as a compatibility launcher. It opens the compiled app when available, otherwise it falls back to the PowerShell WPF control panel.
+
+The control panel also includes an Open at login preference. It writes the normal per-user Windows startup entry and starts the app minimized:
 
 ```text
-F1: brightness down 5%
-F2: brightness up 5%
+HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+Value: StudioDisplayXdr
+"...\StudioDisplayXdr.exe" --minimized
 ```
 
-This is best-effort. Some keyboards, firmware layers, or apps may reserve these keys. If registration fails, the tray app disables the hotkey checkbox and the tray menu controls remain available.
+If automatic brightness is enabled, that opt-in is also remembered and resumes on launch when an ambient source is available.
+
+The control panel also reads the active Studio Display XDR signal through Windows DisplayConfig and shows:
+
+```text
+resolution
+refresh rate
+HDR / Advanced Color state
+bits per color channel
+```
+
+The 60 Hz, 120 Hz, and HDR controls are manual. The app does not change refresh rate or HDR state on launch.
 
 The other launchers are simple one-shot wrappers around the PowerShell script.
 
@@ -88,9 +110,34 @@ The HID descriptor reports logical min/max as `0..0`, so the script uses an Appl
 
 No administrator privileges are required for brightness control when Windows exposes the HID interface normally.
 
+The compiled app uses a registry fallback to find the Studio HID path when SetupAPI enumeration does not return the device. The same fallback pattern is used by the PowerShell scripts.
+
+## Automatic Brightness
+
+Automatic brightness is implemented in the compiled app.
+
+Source priority:
+
+```text
+Windows ambient-light sensor
+Studio Display XDR MI_08 experimental connector
+Studio Display Camera fallback
+```
+
+The camera fallback is a practical workaround for PID `0x1116`, where Windows currently does not expose a native ambient-light sensor. It is opt-in through the automatic brightness toggle and uses the working Studio Display Camera to estimate room brightness from frame luminance.
+
+Check the connector:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\Get-StudioXdrAmbientStatus.ps1
+```
+
+When any ambient source returns readings, the app adjusts brightness through the same working Apple HID brightness path.
+
+More detail: [auto-brightness.md](auto-brightness.md).
+
 ## Future Work
 
-- Add global hotkeys for brightness up/down.
-- Add a signed EXE wrapper for the tray app.
-- Support multiple Apple displays and route brightness to the focused monitor.
+- Sign and harden the ambient connector driver flow.
+- Add optional keyboard brightness shortcuts.
 - Investigate reference mode / preset control over Apple HID.

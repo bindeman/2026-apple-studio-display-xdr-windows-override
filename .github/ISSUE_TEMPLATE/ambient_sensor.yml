@@ -1,0 +1,84 @@
+name: Ambient sensor experiment
+description: Report MI_08, WinUSB, libusb, or automatic-brightness sensor findings.
+title: "[Ambient] "
+labels:
+  - experimental
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The native Studio Display XDR ambient sensor path is experimental.
+        The known target interface is `USB\VID_05AC&PID_1116&REV_1801&MI_08`.
+        Do not bind filters to the camera, audio, parent composite device, hub, or non-MI_08 HID interfaces.
+        Run `Check-Ambient.cmd` and `Support-Report.cmd` before filing; the support report includes app settings, auto-brightness tuning, install state, and current driver binding.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What did you test?
+      description: Describe whether this was Windows ALS, WinUSB, libusb-win32 filter, Zadig/libwdi, or camera fallback.
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Ambient source path
+      options:
+        - Windows LightSensor API
+        - Studio Display XDR MI_08 WinUSB
+        - Studio Display XDR MI_08 libusb-win32 filter
+        - Studio Display Camera fallback
+        - Pro Display XDR or older Studio Display sensor reuse
+        - Unknown
+    validations:
+      required: true
+  - type: textarea
+    id: support_report
+    attributes:
+      label: Support report
+      description: Drag the generated report file here, or paste the key lines if upload is unavailable.
+      placeholder: "Attach reports/studio-xdr-support-*.txt"
+    validations:
+      required: true
+  - type: textarea
+    id: driver_target
+    attributes:
+      label: Ambient driver target check
+      description: Run the command below before changing drivers and attach or paste the output.
+      value: |
+        powershell -ExecutionPolicy Bypass -File .\scripts\Test-StudioXdrAmbientDriverTarget.ps1
+    validations:
+      required: true
+  - type: textarea
+    id: ambient_status
+    attributes:
+      label: Get-StudioXdrAmbientStatus output
+      description: Run the command below and attach or paste the output.
+      value: |
+        powershell -ExecutionPolicy Bypass -File .\scripts\Get-StudioXdrAmbientStatus.ps1
+    validations:
+      required: true
+  - type: textarea
+    id: sensor_correlation
+    attributes:
+      label: Apple display sensor correlation
+      description: Run the command below if another Apple display, especially Pro Display XDR or older Studio Display, is connected.
+      value: |
+        powershell -ExecutionPolicy Bypass -File .\scripts\Get-AppleDisplaySensorCorrelation.ps1
+    validations:
+      required: false
+  - type: textarea
+    id: topology
+    attributes:
+      label: USB topology output
+      description: Run the command below if you changed drivers or filters.
+      value: |
+        powershell -ExecutionPolicy Bypass -File .\scripts\Get-AppleDisplayUsbTopology.ps1
+    validations:
+      required: false
+  - type: textarea
+    id: recovery
+    attributes:
+      label: Recovery notes
+      description: Say whether uninstalling the filter or reconnecting/rebooting restored normal camera/audio/brightness behavior.
+    validations:
+      required: false
